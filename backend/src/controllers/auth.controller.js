@@ -51,7 +51,7 @@ export const login = async (req,res) => {
         }
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if(!isPasswordCorrect){
-            return res.status(400).json({message: "Invalid credentials"});
+            return res.status(400).json({message: "Invalid credentials here"});
         }
         // generate jwt token here
         generateToken(user._id, res);
@@ -77,3 +77,6 @@ export const logout = (req,res) => {
     }
 };
 
+export const updateProfile = (req, res) => {
+    
+}
