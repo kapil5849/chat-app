@@ -13,13 +13,12 @@ import { useThemeStore } from './store/useThemeStore'
 import SettingsPage from "./pages/SettingsPage";
 
 const App = () => {
-  const {authUser, checkAuth, isCheckingAuth} = useAuthStore();
+  const {authUser, checkAuth, isCheckingAuth, onlineUsers} = useAuthStore();
   const {theme} = useThemeStore();
+  console.log(onlineUsers)
   useEffect(() => {
     checkAuth();
   },[checkAuth]);
-
-  console.log(authUser," authUser");
 
   if(isCheckingAuth && !authUser){
     return(

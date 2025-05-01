@@ -8,13 +8,23 @@ import { useAuthStore } from '../store/useAuthStore'
 
 
 const ChatContainer = () => {
-  const {messages, isMessagesLoading, getMessages, selectedUser} = useChatStore();
+  const {messages, isMessagesLoading, getMessages, selectedUser, subscribeToMessages, unsubscribeFromMessages} = useChatStore();
 
   const {authUser} = useAuthStore()
   const messageEndRef = useRef(null)
   useEffect(() => {
     getMessages(selectedUser._id)
+    subscribeToMessages();
+    return () => {
+      unsubscribeFromMessages();
+
+    }
   },[selectedUser, getMessages])
+  useEffect(() => {
+    if(messageEndRef.current && messages){
+      messageEndRef.current.scrollIntoView({ behavior: "smooth"})
+    }
+  },[messages])
   if(isMessagesLoading){
     return (
       <div className='flex-1 flex flex-col overflow-auto'>
