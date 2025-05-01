@@ -1,3 +1,4 @@
+
 import daisyui from "daisyui";
 
 /** @type {import('tailwindcss').Config} */
@@ -15,7 +16,7 @@ export default {
       "bumblebee",
       "emerald",
       "corporate",
-      "synthwave",
+      "synthwave",  
       "retro",
       "cyberpunk",
       "valentine",
