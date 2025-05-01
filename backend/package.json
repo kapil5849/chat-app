@@ -4,7 +4,11 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
+<<<<<<< HEAD
     "test": "echo \"Error: no test specified\" && exit 1"
+=======
+    "start": "node src/index.js"
+>>>>>>> b9a3103 (set frontend in backend like one place)
   },
   "keywords": [],
   "author": "",
@@ -13,6 +17,10 @@
   "description": "",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+<<<<<<< HEAD
+=======
+    "chat-app": "file:..",
+>>>>>>> b9a3103 (set frontend in backend like one place)
     "cloudinary": "^2.6.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
