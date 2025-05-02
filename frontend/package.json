@@ -11,14 +11,8 @@
   },
   "dependencies": {
     "axios": "^1.9.0",
-<<<<<<< HEAD
+
     "chat-app": "file:..",
-=======
-<<<<<<< HEAD
-=======
-    "chat-app": "file:..",
->>>>>>> b9a3103 (set frontend in backend like one place)
->>>>>>> master
     "lucide-react": "^0.503.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
