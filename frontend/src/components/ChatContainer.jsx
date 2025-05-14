@@ -5,6 +5,7 @@ import { useChatStore } from '../store/useChatStore'
 import MessageSkeleton from './skeletons/MessageSkeleton'
 import {formatMessageTime} from '../lib/utils'
 import { useAuthStore } from '../store/useAuthStore'
+import { MessageSquare } from 'lucide-react'
 
 
 const ChatContainer = () => {
@@ -34,8 +35,36 @@ const ChatContainer = () => {
       </div>
     )
   }
+  const isFriendRequestAccepted = false;
   return (
-    <div className='flex-1 flex flex-col overflow-auto'>
+    isFriendRequestAccepted ? (
+    <div className="w-full flex flex-1 flex-col items-center justify-center p-16 bg-base-100/50">
+      <div className="max-w-md text-center space-y-6">
+        {/* Icon Display */}
+        <div className="flex justify-center gap-4 mb-4">
+          <div className="relative">
+            <div
+              className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center
+             justify-center animate-bounce"
+            >
+              <MessageSquare className="w-8 h-8 text-primary " />
+            </div>
+          </div>
+        </div>
+
+        {/* Welcome Text */}
+        <h2 className="text-2xl font-bold">Welcome to Chatty!</h2>
+        <p className="text-base-content/60">
+          For this conversation, you need to send the friend request first and wait for the other person to accept it.
+        </p>
+      </div>
+      {/* handling requested of users */}
+      <div className="flex justify-center mt-4">
+      <button className='btn btn-primary w-full'> Send request </button>
+      </div>
+    </div>
+    ) : (
+      <div className='flex-1 flex flex-col overflow-auto'>
       <ChatHeader/>
       <div className='flex-1 overflow-y-auto p-4 space-y-4'>
         {messages.map((message) => (
@@ -70,7 +99,8 @@ const ChatContainer = () => {
         ))}
       </div>
       <MessageInput/>
-    </div>
+    </div>)
+    
   )
 }
 

@@ -3,6 +3,7 @@ import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from "lucide-react";
 import { useAuthStore } from '../store/useAuthStore';
 import AuthImagePattern from '../components/AuthImagePattern';
 import { Link } from 'react-router-dom';
+import GoogleAuthButton from '../components/GoogleAuthButton';
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -22,7 +23,7 @@ const LoginPage = () => {
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
           {/* LOGO */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 pt-10">
             <div className="flex flex-col items-center gap-2 group">
               <div
                 className="size-12 rounded-xl bg-primary/10 flex items-center justify-center 
@@ -94,6 +95,14 @@ const LoginPage = () => {
                 "Sign In"
               )}
             </button>
+            <div className="flex items-center justify-center my-3">
+              <div className="w-20 border-t"></div>
+                <p className="text-base-content/60 mx-3">Or</p>
+              <div className="w-20 border-t"></div>
+            </div>
+            <div>
+              <GoogleAuthButton/>
+            </div>
           </form>
 
           <div className="text-center">

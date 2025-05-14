@@ -8,12 +8,17 @@ const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
   const {onlineUsers} = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false)
+  const [addFriend, setAddFriend] = useState(false);
 
   useEffect(() => {
     getUsers();
   }, [getUsers]);
 
   const filteredUsers = showOnlineOnly ? users.filter(user => onlineUsers.includes(user._id)) : users;
+
+  const handleSelectUser = (user) => {
+    setSelectedUser(user)
+  }
 
   if (isUsersLoading) return <SidebarSkeleton />;
 
@@ -41,7 +46,7 @@ const Sidebar = () => {
         {filteredUsers?.map((user) => (
           <button
             key={user._id}
-            onClick={() => setSelectedUser(user)}
+            onClick={() => handleSelectUser(user)}
             className={`
               w-full p-3 flex items-center gap-3
               hover:bg-base-300 transition-colors
