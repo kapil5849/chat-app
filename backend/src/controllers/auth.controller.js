@@ -7,7 +7,7 @@ export const signup = async (req,res) => {
     const {fullName, email, password} = req.body
     try{
         if(!fullName || !email || !password){
-            return res.status(400).json({message: "All fields are required"});
+            return res.status(400).json({message: "Full name, email and password are required"});
         }
         // hash password
         if(password.length < 6){
@@ -46,10 +46,8 @@ export const signup = async (req,res) => {
 
 export const login = async (req,res) => {
     const {email, password} = req.body;
-    console.log(email, password, "email and password")
     try{
         const user = await User.findOne({email});
-        console.log(user, "user");
         if(!user){
             return res.status(400).json({message: "Invalid credentials"})
         }
@@ -65,6 +63,13 @@ export const login = async (req,res) => {
             fullName: user.fullName,
             email: user.email,
             profilePic: user.profilePic,
+            userName: user.userName,
+            bio: user.bio,
+            mobile: user.mobile,
+            dob: user.dob,
+            location: user.location,
+            gender: user.gender,
+            isProfileComplete: user.isProfileComplete,
         })
     }catch(error){
         console.log("Error in login controller",error.message);

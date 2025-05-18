@@ -1,4 +1,5 @@
 import { THEMES } from "../constants";
+import { useAuthStore } from "../store/useAuthStore";
 import { useThemeStore } from "../store/useThemeStore";
 import { Send } from "lucide-react";
 
@@ -9,6 +10,8 @@ const PREVIEW_MESSAGES = [
 
 const SettingsPage = () => {
   const { theme, setTheme } = useThemeStore();
+
+  const {authUser} = useAuthStore();
 
   return (
     <div className="h-screen container mx-auto px-4 pt-20 max-w-5xl">
@@ -54,10 +57,10 @@ const SettingsPage = () => {
                 <div className="px-4 py-3 border-b border-base-300 bg-base-100">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-content font-medium">
-                      J
+                      {authUser?.fullName ? authUser.fullName.charAt(0).toUpperCase() : "K"}
                     </div>
                     <div>
-                      <h3 className="font-medium text-sm">John Doe</h3>
+                      <h3 className="font-medium text-sm">{authUser?.fullName || "Kapil Vaishnav"}</h3>
                       <p className="text-xs text-base-content/70">Online</p>
                     </div>
                   </div>

@@ -41,7 +41,7 @@ const requireAuthzz = (element) => {
 const requireAuth = (element) => {
   if (!authUser) return <Navigate to="/login" replace />;
   
-  if (location.pathname === '/' && !authUser.isProfileComplete) {
+  if (!authUser.isProfileComplete) {
     return <Navigate to="/profile" state={{ forceComplete: true }} replace />;
   }
   

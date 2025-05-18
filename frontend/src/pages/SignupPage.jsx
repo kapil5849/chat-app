@@ -26,15 +26,18 @@ const SignupPage = () => {
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = validateForm();
-    if(success === true){
+    if (!validateForm()) return;
       try {
         await signup(formData);
-        navigate('/profile')
+        navigate('/profile', { 
+          state: { 
+            forceComplete: true,
+            from: location.state?.from || '/' 
+          }
+        });
       } catch (error) {
-        toast.error(error || "something went wrong.")
+        toast.error(error || "Signup failed.")
       }
-    }
   }
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
