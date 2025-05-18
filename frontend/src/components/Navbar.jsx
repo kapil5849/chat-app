@@ -1,7 +1,8 @@
-import { LogOut, MessageSquare, Settings, User } from 'lucide-react'
+import { Bell, LogOut, MessageSquare, Settings, User } from 'lucide-react'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAuthStore } from '../store/useAuthStore'
+import Notification from './Notifications/Notification'
 
 const Navbar = () => {
   const {authUser, logout} = useAuthStore();
@@ -24,9 +25,7 @@ const Navbar = () => {
             <Link
               to={"/settings"}
               className={`
-              btn btn-sm gap-2 transition-colors
-              
-              `}
+              btn btn-sm gap-2 transition-colors`}
             >
               <Settings className="w-4 h-4" />
               <span className="hidden sm:inline">Settings</span>
@@ -38,6 +37,26 @@ const Navbar = () => {
                   <User className="size-5" />
                   <span className="hidden sm:inline">Profile</span>
                 </Link>
+                <div className="dropdown dropdown-end">
+                  <div tabIndex={0} className="btn btn-sm gap-2">
+                    <Bell className="size-5" />
+                    <span className="hidden sm:inline">Notifications</span>
+                  </div>
+                  <ul 
+                    tabIndex={0}
+                    className="dropdown-content menu bg-base-100 rounded-box z-10 w-64 shadow-sm max-h-[40vh] overflow-y-auto overflow-x-hidden"
+                  >
+                    <div className="flex flex-col"> 
+                      {[...Array(22)].map((_, i) => (
+                        <li key={i} className="w-full">
+                          <a className="block w-full whitespace-normal truncate hover:bg-base-200 px-4 py-2">
+                            <Notification />
+                          </a>
+                        </li>
+                      ))}
+                    </div>
+                  </ul>
+                </div>
 
                 <button className="flex gap-2 items-center" onClick={logout}>
                   <LogOut className="size-5" />

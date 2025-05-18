@@ -1,4 +1,4 @@
-import { Camera, Mail, User } from 'lucide-react'
+import { BookHeart, Camera, Database, Locate, Mail, Map, MapPin, Phone, Shell, User, UserPen } from 'lucide-react'
 import { useAuthStore} from '../store/useAuthStore.js';
 import { useState } from 'react';
 const ProfilePage = () => {
@@ -15,6 +15,8 @@ const ProfilePage = () => {
       await updateProfile({ profilePic: base64Image });
     }
   }
+
+  const genders = ["boy", "girl", "others"]
   
   return (
     <div className="h-screen pt-20">
@@ -76,6 +78,101 @@ const ProfilePage = () => {
               </div>
               <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser?.email}</p>
             </div>
+
+
+            <div className="space-y-1.5">
+              <div className="text-sm text-zinc-400 flex items-center gap-2">
+                <UserPen className="w-4 h-4" />
+                User Name
+              </div>
+              <input 
+                type='text'
+                className='px-4 py-2.5 bg-base-200 rounded-lg border w-full'
+                placeholder="kapil__vaishnav"
+                // value={}
+                // onChange={(e) => }
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="text-sm text-zinc-400 flex items-center gap-2">
+                <Shell className="w-4 h-4" />
+                Bio
+              </div>
+              <input 
+                type='text'
+                className='px-4 py-2.5 bg-base-200 rounded-lg border w-full'
+                placeholder="Type something to get started..."
+                // value={}
+                // onChange={(e) => }
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="text-sm text-zinc-400 flex items-center gap-2">
+                <Phone className="w-4 h-4" />
+                Mobile (optional)
+              </div>
+              <input 
+                type='text'
+                className='px-4 py-2.5 bg-base-200 rounded-lg border w-full'
+                placeholder="9458768880"
+                // value={}
+                // onChange={(e) => }
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="text-sm text-zinc-400 flex items-center gap-2">
+                <BookHeart className="w-4 h-4" />
+                Gender
+              </div>
+              <select 
+                type='text'
+                className='px-4 py-2.5 bg-base-200 rounded-lg border w-full'
+                placeholder="9458768880"
+                // value={}
+                // onChange={(e) => }
+              >
+                <option value="">Select Gender</option>
+                  {genders.map((gender) => (
+                    <option key={gender} value={gender}> 
+                      {gender.charAt(0).toUpperCase() + gender.slice(1)}
+                    </option>
+                  ))}
+              </select>
+            </div>
+
+            {/* should be manage input date age should be >= 14 */}
+            <div className="space-y-1.5">
+              <div className="text-sm text-zinc-400 flex items-center gap-2">
+                <Database className="w-4 h-4" />
+                DOB
+              </div>
+              <input 
+                type='date'
+                className='px-4 py-2.5 bg-base-200 rounded-lg border w-full'
+                // value={}
+                // onChange={(e) => }
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="text-sm text-zinc-400 flex items-center gap-2">
+                <MapPin className="w-4 h-4" />
+                Location
+              </div>
+              <input 
+                type='text'
+                className='px-4 py-2.5 bg-base-200 rounded-lg border w-full'
+                placeholder="Jaipur, India"
+                // value={}
+                // onChange={(e) => }
+              />
+            </div>
+
+
+            
           </div>
 
           <div className="mt-6 bg-base-300 rounded-xl p-6">

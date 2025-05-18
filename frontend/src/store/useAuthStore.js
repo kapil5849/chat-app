@@ -2,6 +2,7 @@ import {create} from 'zustand';
 import {axiosInstance} from "../lib/axios.js"
 import toast from 'react-hot-toast';
 import {io} from 'socket.io-client';
+import { replace } from 'react-router-dom';
 const BASEURL = import.meta.env.MODE === 'development' ? "http://localhost:5001" : '/';
 
 export const useAuthStore = create((set, get) => ({
@@ -65,10 +66,10 @@ export const useAuthStore = create((set, get) => ({
         try{
             const response = await axiosInstance.put('/auth/update-profile', data);
             set({authUser: response.data});
-            toast.success("Profile updated successfully")
+            toast.success("Profile updated successfully");
         }catch(error){
             console.log("error in update profile", error);
-            toast.error(error.response?.data?.message);
+            toast.error(error.response?.data?.message || "please upload picture with less size");
         }finally{
             set({isUpdatingProfile: false});
         }
