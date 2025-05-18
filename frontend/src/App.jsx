@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import Navbar from './components/Navbar'
-import { Route, Routes, Navigate } from 'react-router-dom'
+import { Route, Routes, Navigate, useLocation } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import SignupPage from './pages/SignupPage'
 import LoginPage from './pages/LoginPage'
@@ -28,15 +28,39 @@ const App = () => {
     )
   }
 
+  const location = useLocation();
+
+const requireAuthzz = (element) => {
+  if (!authUser) return <Navigate to="/login" state={{ from: location }} replace />;
+  if (!authUser.isProfileComplete && location.pathname !== '/profile') {
+    return <Navigate to="/profile" state={{ from: location }} replace />;
+  }
+  return element;
+};
+
+const requireAuth = (element) => {
+  if (!authUser) return <Navigate to="/login" replace />;
+  
+  if (location.pathname === '/' && !authUser.isProfileComplete) {
+    return <Navigate to="/profile" state={{ forceComplete: true }} replace />;
+  }
+  
+  return element;
+};
+
   return (
     <div data-theme={theme}>
       <Navbar/>
       <Routes>
-        <Route path='/' element={authUser ? <HomePage/> : <Navigate to='/login'/>}/>
+        <Route path='/' element={requireAuth(<HomePage />)} />
         <Route path='/signup' element={!authUser ? <SignupPage/> : <Navigate to="/"/>}/>
         <Route path='/login' element={!authUser ? <LoginPage/> : <Navigate to="/"/>}/>
         <Route path='/settings' element={<SettingsPage/>}/>
-        <Route path='/profile' element={authUser ? <ProfilePage/> : <Navigate to="/login"/>}/>
+        <Route path='/profile' element={authUser ?(
+          authUser?.isProfileComplete ? <ProfilePage/> : (<ProfilePage forceCompleteMode={true}/>)
+        ): (
+          <Navigate to="/login"/>
+        )}/>
         
       </Routes>
 

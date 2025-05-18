@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, User } from "lucide-react";
 import { useAuthStore } from '../store/useAuthStore';
 import AuthImagePattern from '../components/AuthImagePattern';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate  } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import GoogleAuthButton from '../components/GoogleAuthButton';
 
 const SignupPage = () => {
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
     fullName: '',
@@ -23,11 +24,16 @@ const SignupPage = () => {
     if(formData.password.length < 6) return toast.error("Password must be at least 6 characters long");
     return true;
   }
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const success = validateForm();
     if(success === true){
-      signup(formData);
+      try {
+        await signup(formData);
+        navigate('/profile')
+      } catch (error) {
+        toast.error(error || "something went wrong.")
+      }
     }
   }
   return (

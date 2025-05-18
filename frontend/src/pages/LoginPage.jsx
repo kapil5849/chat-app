@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from "lucide-react";
 import { useAuthStore } from '../store/useAuthStore';
 import AuthImagePattern from '../components/AuthImagePattern';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import GoogleAuthButton from '../components/GoogleAuthButton';
 
 const LoginPage = () => {
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
@@ -13,9 +14,14 @@ const LoginPage = () => {
   });
   const {isLoggingIng, login} = useAuthStore();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    login(formData)
+    try{
+      await login(formData);
+      navigate('/');
+    }catch(error){
+      toast.error(error || "login failed, try again.")
+    }
   }
   return (
     <div className="min-h-screen grid lg:grid-cols-2">

@@ -16,13 +16,37 @@ const userSchema = new mongoose.Schema(
             required: true,
             minlength: 6,
         },
+        userName: {
+            type: String,
+            required: true,
+        },
+        bio: {
+            type: String,
+            required: true,
+        },
+        mobile: {
+            type: String,
+            required: true,
+        },
+        gender: {
+            type: String,
+            required: true,
+        },
+        dob: {
+            type: Date,
+            required: true,
+        },
+        location: {
+            type: String,
+            required: true,
+        },
         profilePic: {
             type: String,
             default: "",
         },
     },
     {
-        timestamps: true
+        timestamps: true,
     }
 )
 
