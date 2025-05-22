@@ -134,14 +134,14 @@ const SignupPage = () => {
                 "Create Account"
               )}
             </button>
-            <div className="flex items-center justify-center my-3">
+            {/* <div className="flex items-center justify-center my-3">
               <div className="w-20 border-t"></div>
                 <p className="text-base-content/60 mx-3">Or</p>
               <div className="w-20 border-t"></div>
             </div>
             <div>
               <GoogleAuthButton/>
-            </div>
+            </div> */}
           </form>
 
           <div className="text-center">
