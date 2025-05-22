@@ -5,7 +5,7 @@ import { useChatStore } from '../store/useChatStore'
 import MessageSkeleton from './skeletons/MessageSkeleton'
 import {formatMessageTime} from '../lib/utils'
 import { useAuthStore } from '../store/useAuthStore'
-import { Mail, MessageSquare, User } from 'lucide-react'
+import { MessageSquare } from 'lucide-react'
 
 const ChatContainer = () => {
   const {messages, isMessagesLoading, getMessages, selectedUser, subscribeToMessages, unsubscribeFromMessages} = useChatStore();
@@ -32,83 +32,7 @@ const ChatContainer = () => {
       </div>
     )
   }
-  const isFriendRequestSended = false;
-  const isFriendRequestAccepted = true;
   return (
-    isFriendRequestSended ? (
-    <div className="w-full flex flex-1 flex-col items-center justify-center p-16 bg-base-100/50">
-      <div className="max-w-md text-center space-y-6">
-        {/* Icon Display */}
-        <div className="flex justify-center gap-4 mb-4">
-          <div className="relative">
-            <div
-              className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center
-             justify-center animate-bounce"
-            >
-              <MessageSquare className="w-8 h-8 text-primary " />
-            </div>
-          </div>
-        </div>
-        {/* Welcome Text */}
-        <h2 className="text-2xl font-bold">Welcome to Chatty!</h2>
-        <p className="text-base-content/60">
-        This is Private Account, For this conversation, you need to send the friend request first and wait for the other person to accept it.
-        </p>
-      </div>
-      <div className="pt-2">
-          <div className="text-sm text-zinc-400 flex items-center gap-2">
-          <img
-                src={selectedUser?.profilePic || "/avatar.png"}
-                alt="Profile"
-                className="size-12 rounded-full object-cover border-2 "
-              />
-            <p className="px-4 py-2.5 rounded-lg text-2xl">{selectedUser?.fullName ? selectedUser?.fullName.charAt(0).toUpperCase() + selectedUser.fullName.slice(1): selectedUser?.email}</p>
-          </div>
-      </div>
-      {/* handling requested of users */}
-      <div className="flex justify-center mt-4">
-      <button className='btn btn-primary w-full' onClick={() => console.log("request is sended to user")}> Send request </button>
-      </div>
-    </div>
-    ) : isFriendRequestAccepted ? (
-      <div className="w-full flex flex-1 flex-col items-center justify-center p-16 bg-base-100/50">
-      <div className="max-w-md text-center space-y-6">
-        {/* Icon Display */}
-        <div className="flex justify-center gap-4 mb-4">
-          <div className="relative">
-            <div
-              className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center
-             justify-center animate-bounce"
-            >
-              <MessageSquare className="w-8 h-8 text-primary " />
-            </div>
-          </div>
-        </div>
-        {/* Welcome Text */}
-        <h2 className="text-2xl font-bold">Welcome to Chatty!</h2>
-        <p className="text-base-content/60">
-          This is Private Account, For this conversation, you need to accept the friend request first.
-        </p>
-      </div>
-      <div>
-      <div className="pt-2">
-          <div className="text-sm text-zinc-400 flex items-center gap-2">
-          <img
-                src={selectedUser?.profilePic || "/avatar.png"}
-                alt="Profile"
-                className="size-12 rounded-full object-cover border-2 "
-              />
-            <p className="px-4 py-2.5 rounded-lg text-2xl">{selectedUser?.fullName ? selectedUser?.fullName.charAt(0).toUpperCase() + selectedUser.fullName.slice(1): selectedUser?.email}</p>
-          </div>
-      </div>
-      </div>
-      {/* handling requested of users */}
-      <div className="flex justify-center mt-4 gap-2">
-        <button className='btn btn-primary w-40' onClick={() => console.log("request is declined by user")}> Declined request </button>
-        <button className='btn btn-primary w-40' onClick={() => console.log("request is accept by user")}> Accept request </button>
-      </div>
-    </div>
-    ):(
       <div className='flex-1 flex flex-col overflow-auto'>
       <ChatHeader/>
       <div className='flex-1 overflow-y-auto p-4 space-y-4'>
@@ -144,8 +68,7 @@ const ChatContainer = () => {
         ))}
       </div>
       <MessageInput/>
-    </div>)
+    </div>
   )
 }
-
-export default ChatContainer
+export default ChatContainer;

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import Navbar from './components/Navbar'
-import { Route, Routes, Navigate, useLocation } from 'react-router-dom'
+import { Route, Routes, Navigate } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import SignupPage from './pages/SignupPage'
 import LoginPage from './pages/LoginPage'
@@ -27,16 +27,6 @@ const App = () => {
       </div>
     )
   }
-
-  const location = useLocation();
-
-const requireAuthzz = (element) => {
-  if (!authUser) return <Navigate to="/login" state={{ from: location }} replace />;
-  if (!authUser.isProfileComplete && location.pathname !== '/profile') {
-    return <Navigate to="/profile" state={{ from: location }} replace />;
-  }
-  return element;
-};
 
 const requireAuth = (element) => {
   if (!authUser) return <Navigate to="/login" replace />;

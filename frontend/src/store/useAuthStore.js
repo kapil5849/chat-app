@@ -75,7 +75,7 @@ export const useAuthStore = create((set, get) => ({
             return response.data;
         }catch(error){
             console.log("error in update profile", error);
-            toast.error(error.response?.data?.message || "Update failed.");
+            toast.error(error.response?.data?.message || "Update failed, choose small size image");
         }finally{
             set({isUpdatingProfile: false});
         }

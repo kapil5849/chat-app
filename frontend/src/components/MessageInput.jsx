@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useChatStore } from '../store/useChatStore';
 import { Image, Send, Smile, X } from 'lucide-react';
 import EmojiPicker from 'emoji-picker-react';
+import toast from 'react-hot-toast';
 
 const MessageInput = () => {
     const [text, setText] = useState('');
@@ -10,6 +11,7 @@ const MessageInput = () => {
     const {sendMessages} = useChatStore();
     const fileInputRef = useRef(null);
     const emojiPickerRef = useRef(null);
+    const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
     useEffect(() => {
       const handleClickOutside = (event) => {
@@ -27,9 +29,17 @@ const MessageInput = () => {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
+        if(!file) return;
         if(!file.type.startsWith("image/")){
             toast.error("Please select an image file.")
             return;
+        }
+        console.log(file.size, "size")
+        if (file.size > MAX_FILE_SIZE) {
+        toast.error('Image size exceeds 2MB. Please select a smaller image.');
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        setImagePreview(null);
+          return;
         }
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -59,6 +69,7 @@ const MessageInput = () => {
             if(fileInputRef.current) fileInputRef.current.value = "";
         }catch(error){
             console.error("Failed to send message:", error);
+            toast.error('Failed to send message, image size is long. Please try again.')
         }
     }
 
