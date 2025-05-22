@@ -17,7 +17,6 @@ const ProfilePage = ({forceCompleteMode = false}) => {
     gender: '',
   });
   const [isCompleteMode, setIsCompleteMode] = useState(false);
-  console.log(formData,"issue")
   useEffect(() => {
     if(forceCompleteMode || !authUser?.isProfileComplete){
       setIsCompleteMode(true);

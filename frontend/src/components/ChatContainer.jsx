@@ -1,11 +1,10 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import ChatHeader from './ChatHeader'
 import MessageInput from './MessageInput'
 import { useChatStore } from '../store/useChatStore'
 import MessageSkeleton from './skeletons/MessageSkeleton'
 import {formatMessageTime} from '../lib/utils'
 import { useAuthStore } from '../store/useAuthStore'
-import { MessageSquare } from 'lucide-react'
 
 const ChatContainer = () => {
   const {messages, isMessagesLoading, getMessages, selectedUser, subscribeToMessages, unsubscribeFromMessages} = useChatStore();
