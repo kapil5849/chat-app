@@ -2,24 +2,51 @@ import { useEffect, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
-import { Users } from "lucide-react";
+import { SearchCheckIcon, Users } from "lucide-react";
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
   const {onlineUsers} = useAuthStore();
-  const [showOnlineOnly, setShowOnlineOnly] = useState(false)
-
+  const [showOnlineOnly, setShowOnlineOnly] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+   
   useEffect(() => {
     getUsers();
   }, [getUsers]);
 
-  const filteredUsers = showOnlineOnly ? users.filter(user => onlineUsers.includes(user._id)) : users;
+  const filteredUsers = users.filter((user) => {
+    const onlineFilter = showOnlineOnly ? onlineUsers.includes(user._id) : true;
+    const searchFilter = searchQuery === '' || 
+    user.fullName.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    (user.username && user.username.toLowerCase().includes(searchQuery.toLowerCase()));
+    return onlineFilter && searchFilter;
+  });
+
+  const handleSelectUser = (user) => {
+    setSelectedUser(user)
+  }
+
+  const handleSearchChange  = (e) => {
+    setSearchQuery(e.target.value);
+  }
 
   if (isUsersLoading) return <SidebarSkeleton />;
 
   return (
     <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
       <div className="border-b border-base-300 w-full p-5">
+        <div className="relative flex gap-3 items-center mb-3">
+          <div className="absolute left-2 ">
+            <SearchCheckIcon className="w-5 h-5"/>
+          </div>
+          <input
+            type="text"
+            className="input input-sm input-bordered w-full pl-10 py-5 rounded-lg"
+            placeholder="Search your friends"
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+        </div>
         <div className="flex items-center gap-2">
           <Users className="size-6" />
           <span className="font-medium hidden lg:block">Contacts</span>
@@ -41,7 +68,7 @@ const Sidebar = () => {
         {filteredUsers?.map((user) => (
           <button
             key={user._id}
-            onClick={() => setSelectedUser(user)}
+            onClick={() => handleSelectUser(user)}
             className={`
               w-full p-3 flex items-center gap-3
               hover:bg-base-300 transition-colors
@@ -72,7 +99,9 @@ const Sidebar = () => {
           </button>
         ))}
         {filteredUsers.length === 0 && (
-          <div className="text-center text-zinc-500 py-4">No online users</div>
+          <div className="text-center text-zinc-500 py-4">
+            {searchQuery ? "No users match with your search" : "No online users"}
+          </div>
         )}
       </div>
     </aside>

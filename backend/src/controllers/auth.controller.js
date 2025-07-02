@@ -1,5 +1,5 @@
 import User from '../models/user.model.js';
-import bcrypt, { hash } from 'bcryptjs'
+import bcrypt from 'bcryptjs'
 import {generateToken} from '../lib/utils.js'
 import cloudinary from '../lib/cloudinary.js'
 
@@ -7,7 +7,7 @@ export const signup = async (req,res) => {
     const {fullName, email, password} = req.body
     try{
         if(!fullName || !email || !password){
-            return res.status(400).json({message: "All fields are required"});
+            return res.status(400).json({message: "Full name, email and password are required"});
         }
         // hash password
         if(password.length < 6){
@@ -32,7 +32,8 @@ export const signup = async (req,res) => {
                 _id: newUser._id,
                 fullName: newUser.fullName,
                 email: newUser.email,
-                profilePic: newUser.profilePic,
+                // profilePic: newUser.profilePic,
+                isProfileComplete: newUser.isProfileComplete,
             });
         }else{
             res.status(400).json({message: "Invalid user data"});
@@ -45,10 +46,8 @@ export const signup = async (req,res) => {
 
 export const login = async (req,res) => {
     const {email, password} = req.body;
-    console.log(email, password, "email and password")
     try{
         const user = await User.findOne({email});
-        console.log(user, "user");
         if(!user){
             return res.status(400).json({message: "Invalid credentials"})
         }
@@ -64,6 +63,13 @@ export const login = async (req,res) => {
             fullName: user.fullName,
             email: user.email,
             profilePic: user.profilePic,
+            userName: user.userName,
+            bio: user.bio,
+            mobile: user.mobile,
+            dob: user.dob,
+            location: user.location,
+            gender: user.gender,
+            isProfileComplete: user.isProfileComplete,
         })
     }catch(error){
         console.log("Error in login controller",error.message);
@@ -82,21 +88,67 @@ export const logout = (req,res) => {
 };
 
 export const updateProfile = async (req, res) => {
+    const {userName, bio, mobile, dob, location,gender, profilePic} = req.body;
+    const userId = req.user._id;
     try{
-        const {profilePic} = req.body;
-        const userId = req.user._id;
-
         if(!profilePic){
             return res.status(400).json({message: "Profile picture is required"});
         }
-        const uploadResponse = await cloudinary.uploader.upload(profilePic)
+        if(mobile && !/^\d{10,15}$/.test(mobile)){
+            return res.status(400).json({message: "Mobile number must be between 10 digits"})
+        }
+        if (dob) {
+            const dobDate = new Date(dob);
+            if (isNaN(dobDate.getTime())) {
+                return res.status(400).json({ message: "Invalid date of birth" });
+            }
+            
+            const today = new Date();
+            let age = today.getFullYear() - dobDate.getFullYear();
+            const monthDiff = today.getMonth() - dobDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate())) {
+                age--;
+            }
+            
+            if (age < 14) {
+                return res.status(400).json({ message: "You must be at least 14 years old" });
+            }
+        }
+        if(!gender){
+            return res.status(400).json({message: "Gender is required"});
+        }
+
+        const uploadResponse = await cloudinary.uploader.upload(profilePic);
+        const updateData = {
+            userName,
+            bio,
+            mobile,
+            dob: dob ? new Date(dob) : undefined,
+            location,
+            gender,
+            profilePic: uploadResponse.secure_url,
+            isProfileComplete: true, // mark profile as complete
+        };
+        Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
         const updateUser = await User.findByIdAndUpdate(userId, 
-            {profilePic: uploadResponse.secure_url},
-            {new: true}
-        );
-        res.status(200).json(updateProfile);
+            updateData,
+            // {profilePic: uploadResponse.secure_url},
+            // {new: true}
+            { new: true, runValidators: true } 
+        ).select('-password');
+        if (!updateUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json(updateUser);
     }catch{
         console.log("error in update profile", error);
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({ message: error.message });
+        }
+        if (error.message.includes('File size too large')) {
+            return res.status(400).json({ message: "Profile picture size too large" });
+        }
         res.status(500).json({message: "Internal server error"});
     }
 }

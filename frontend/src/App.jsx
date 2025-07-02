@@ -28,15 +28,29 @@ const App = () => {
     )
   }
 
+const requireAuth = (element) => {
+  if (!authUser) return <Navigate to="/login" replace />;
+  
+  if (!authUser.isProfileComplete) {
+    return <Navigate to="/profile" state={{ forceComplete: true }} replace />;
+  }
+  
+  return element;
+};
+
   return (
     <div data-theme={theme}>
       <Navbar/>
       <Routes>
-        <Route path='/' element={authUser ? <HomePage/> : <Navigate to='/login'/>}/>
+        <Route path='/' element={requireAuth(<HomePage />)} />
         <Route path='/signup' element={!authUser ? <SignupPage/> : <Navigate to="/"/>}/>
         <Route path='/login' element={!authUser ? <LoginPage/> : <Navigate to="/"/>}/>
         <Route path='/settings' element={<SettingsPage/>}/>
-        <Route path='/profile' element={authUser ? <ProfilePage/> : <Navigate to="/login"/>}/>
+        <Route path='/profile' element={authUser ?(
+          authUser?.isProfileComplete ? <ProfilePage/> : (<ProfilePage forceCompleteMode={true}/>)
+        ): (
+          <Navigate to="/login"/>
+        )}/>
         
       </Routes>
 

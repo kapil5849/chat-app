@@ -2,9 +2,11 @@ import React, { useState } from 'react'
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from "lucide-react";
 import { useAuthStore } from '../store/useAuthStore';
 import AuthImagePattern from '../components/AuthImagePattern';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import GoogleAuthButton from '../components/GoogleAuthButton';
 
 const LoginPage = () => {
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
@@ -12,9 +14,14 @@ const LoginPage = () => {
   });
   const {isLoggingIng, login} = useAuthStore();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    login(formData)
+    try{
+      await login(formData);
+      navigate('/');
+    }catch(error){
+      toast.error(error || "login failed, try again.")
+    }
   }
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
@@ -22,7 +29,7 @@ const LoginPage = () => {
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
           {/* LOGO */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 pt-10">
             <div className="flex flex-col items-center gap-2 group">
               <div
                 className="size-12 rounded-xl bg-primary/10 flex items-center justify-center 
@@ -42,8 +49,8 @@ const LoginPage = () => {
                 <span className="label-text font-medium">Email</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="size-5 text-base-content/40" />
+                <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none z-10">
+                  <Mail className="size-50 text-base-content/40" />
                 </div>
                 <input
                   type="email"
@@ -60,7 +67,7 @@ const LoginPage = () => {
                 <span className="label-text font-medium">Password</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none z-10">
                   <Lock className="size-5 text-base-content/40" />
                 </div>
                 <input
@@ -94,6 +101,14 @@ const LoginPage = () => {
                 "Sign In"
               )}
             </button>
+            {/* <div className="flex items-center justify-center my-3">
+              <div className="w-20 border-t"></div>
+                <p className="text-base-content/60 mx-3">Or</p>
+              <div className="w-20 border-t"></div>
+            </div>
+            <div>
+              <GoogleAuthButton/>
+            </div> */}
           </form>
 
           <div className="text-center">

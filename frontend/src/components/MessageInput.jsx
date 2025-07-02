@@ -1,18 +1,45 @@
-import React, { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useChatStore } from '../store/useChatStore';
-import { Image, Send, X } from 'lucide-react';
+import { Image, Send, Smile, X } from 'lucide-react';
+import EmojiPicker from 'emoji-picker-react';
+import toast from 'react-hot-toast';
 
 const MessageInput = () => {
     const [text, setText] = useState('');
     const [imagePreview, setImagePreview] = useState(null);
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const {sendMessages} = useChatStore();
     const fileInputRef = useRef(null);
+    const emojiPickerRef = useRef(null);
+    const MAX_FILE_SIZE = 2 * 1024 * 1024;
+
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+            setShowEmojiPicker(false);
+        }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleEmojiClick = (emojiData) => {
+      setText(prevText => prevText + emojiData.emoji);
+    }
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
+        if(!file) return;
         if(!file.type.startsWith("image/")){
             toast.error("Please select an image file.")
             return;
+        }
+        console.log(file.size, "size")
+        if (file.size > MAX_FILE_SIZE) {
+        toast.error('Image size exceeds 2MB. Please select a smaller image.');
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        setImagePreview(null);
+          return;
         }
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -42,12 +69,13 @@ const MessageInput = () => {
             if(fileInputRef.current) fileInputRef.current.value = "";
         }catch(error){
             console.error("Failed to send message:", error);
+            toast.error('Failed to send message, image size is long. Please try again.')
         }
     }
 
 
   return (
-    <div className='p-4 w-full'>
+    <div className='p-4 w-full relative'>
         {imagePreview && (
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
@@ -67,8 +95,24 @@ const MessageInput = () => {
           </div>
         </div>
       )}
+      {showEmojiPicker && (
+        <div ref={emojiPickerRef} className="absolute bottom-16 left-4 z-10">
+            <EmojiPicker 
+                onEmojiClick={handleEmojiClick}
+                width={300}
+                height={350}
+                previewConfig={{ showPreview: false }}
+            />
+        </div>)}
       <form onSubmit={handleSendMessage} className='flex items-center gap-2'>
         <div className='flex-1 flex gap-2'>
+          <button
+            type="button"
+            className={`btn btn-circle ${showEmojiPicker ? "text-blue-500" : "text-zinc-400"}`}
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+          >
+            <Smile size={20}/>
+          </button>
         <input
             type="text"
             className="w-full input input-bordered rounded-lg input-sm sm:input-md"

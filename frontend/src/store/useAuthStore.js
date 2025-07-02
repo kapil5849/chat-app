@@ -64,11 +64,18 @@ export const useAuthStore = create((set, get) => ({
         set({isUpdatingProfile: true});
         try{
             const response = await axiosInstance.put('/auth/update-profile', data);
-            set({authUser: response.data});
-            toast.success("Profile updated successfully")
+            set(state => ({
+                authUser: {
+                  ...state.authUser,
+                  ...response.data,
+                  isProfileComplete: true
+                }
+            }));
+            toast.success("Profile updated successfully.");
+            return response.data;
         }catch(error){
             console.log("error in update profile", error);
-            toast.error(error.response?.data?.message);
+            toast.error(error.response?.data?.message || "Update failed, choose small size image");
         }finally{
             set({isUpdatingProfile: false});
         }

@@ -16,13 +16,21 @@ const userSchema = new mongoose.Schema(
             required: true,
             minlength: 6,
         },
-        profilePic: {
-            type: String,
-            default: "",
-        },
+        // Profile fields (not required initially)
+        userName: String,
+        bio: String,
+        mobile: String,
+        gender: String,
+        dob: Date,
+        location: String,
+        profilePic: String,
+        isProfileComplete: {
+          type: Boolean,
+          default: false
+        }
     },
     {
-        timestamps: true
+        timestamps: true,
     }
 )
 
